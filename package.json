@@ -5,6 +5,8 @@
     "flatbuffers": "^2.0.4",
     "fs": "^0.0.1-security",
     "mathjs": "^9.5.1",
-    "random-points-on-polygon": "^0.0.4"
+    "protobufjs": "^6.11.2",
+    "random-points-on-polygon": "^0.0.4",
+    "util": "^0.12.4"
   }
 }

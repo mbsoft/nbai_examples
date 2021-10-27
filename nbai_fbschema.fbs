@@ -1,4 +1,4 @@
-namespace nbai;
+namespace nbai_fb;
 
 table FBResult {
   error:bool = false;
