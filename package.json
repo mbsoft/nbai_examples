@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@types/node": "^16.11.6",
+    "axios": "^0.24.0",
+    "flatbuffers": "^2.0.4",
+    "fs": "^0.0.1-security",
+    "mathjs": "^9.5.1",
+    "random-points-on-polygon": "^0.0.4"
+  }
+}

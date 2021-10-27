@@ -1,0 +1,62 @@
+namespace nbai;
+
+table FBResult {
+  error:bool = false;
+  status:string;
+  routes:[RouteObject];
+  distance_matrix: DistanceMatrix;
+  snapped_points: SnappedPoints; // for snaptoroad and nearests apis
+}
+
+table RouteObject {
+  distance:float;
+  duration:float;
+  raw_duration:float;
+  predicted_duration:float;
+  weight:float;
+  weight_name:string;
+  geometry:string;
+  legs:[LegObject];
+}
+
+table LegObject {
+  distance:float;
+  duration:float;
+  raw_duration:float;
+  steps:[StepObject];
+}
+
+table StepObject {
+  geometry:string;
+}
+
+table DistanceMatrix {
+    rows: [MatrixRow];
+}
+
+table MatrixRow {
+    elements: [MatrixElement];
+}
+
+table MatrixElement{
+    distance: int;
+    duration: int;
+    raw_duration: int;
+    predicted_duration: int;
+    status: string;
+}
+
+table Point{
+    original_index: int;
+    latitude: float;
+    longitude: float;
+    distance: float;
+    name: string;
+}
+
+table SnappedPoints{
+    points: [Point];
+    distance: int;
+}
+
+root_type FBResult;
