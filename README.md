@@ -2,6 +2,7 @@
 [https://doc.maps.nextbillion.io/api_reference/]
 
 # Distance Matrix
+![Alt text](./screenshot.png "Screenshot")
 ## Description
 Javascript/node.js example of Nextbillion.ai travel/distance matrix calculation API using Flatbuffer, Protobuf, and JSON endpoints. 
 - random set of lat/lon pairs within a defined polygon
