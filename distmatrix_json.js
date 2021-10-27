@@ -26,7 +26,7 @@ async function run() {
     var originArray = [];
 
     logo();
-    
+
     console.log(colorize(91,`Distance Matrix Size = ${numberOfPoints}`));
     console.log(colorize(91,`Position precision = ${precision}`));
     var orig_pts = '', dest_pts = '';
@@ -59,8 +59,8 @@ async function run() {
             process.stdout.write('|' + colorize(91, pt));
         });
         process.stdout.write('|' + '\n');
+        var idx = 0;
         res.data.rows.forEach(function(row) {
-            var idx = 0;
             process.stdout.write(colorize(93,destArray[idx++] + '|'));
             row.elements.forEach(function(element) {
                 process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 12,' ')));
