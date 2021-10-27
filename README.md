@@ -17,6 +17,7 @@ Javascript/node.js example of Nextbillion.ai travel/distance matrix calculation 
 - compile the protobuf definition to JavaScript `protoc --proto_path=. --js_out=library=nbai_pb/matrix,binary:build/gen  nbai_protos.proto`
 - `npm install`
 - transpile TS to JS `tsc build/gen/nbai_fb/*.ts`
+- modify the `.env` file for two entries API_HOST (http://localhost:9999 or https://api.nextbillion.io) and API_KEY (your assigned key)
 - `node distmatrix_json.js` or `node distmatrix_fb.js` `node distmatrix_pb.js`
 - output to console is the time distance grid and the size of the response
 

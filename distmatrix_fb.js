@@ -4,13 +4,13 @@ var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
 var maths = require('mathjs');
 var nbai = require("./build/gen/nbai_fb/f-b-result");
+const dotenv = require('dotenv');
+dotenv.config();
 
 var ontario_poly = require('./ontario_poly.json');
 
 const numberOfPoints = 4;
 const precision = 4;
-const nbai_url = 'http://localhost:9999';
-const api_key = '9e6ebf31a1e74a4b9e20fd18267af852';
 
 function colorize(color, output) {
     return ['\033[', color, 'm', output, '\033[0m'].join('');
@@ -46,7 +46,7 @@ orig_pts = orig_pts.slice(0, orig_pts.length -1);
 dest_pts = dest_pts.slice(0, dest_pts.length -1);
 let departureTime = Math.round(new Date().getTime()/1000);
 
-axios.get(`${nbai_url}/distancematrix/fb?key=${api_key}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`, {responseType: 'arraybuffer'})
+axios.get(`${process.env.API_HOST}/distancematrix/fb?key=${process.env.API_KEY}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`, {responseType: 'arraybuffer'})
     .then((res) => {
         console.log('Response size = ' + res.headers["content-length"] + ' bytes');
         let buf = new fb.ByteBuffer(res.data);

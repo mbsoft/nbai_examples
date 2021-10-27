@@ -2,6 +2,9 @@ const protobuf = require('protobufjs');
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
 var maths = require('mathjs');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
@@ -12,8 +15,6 @@ var ontario_poly = require('./ontario_poly.json');
 
 const numberOfPoints = 10;
 const precision = 4;
-const nbai_url = 'http://localhost:9999';
-const api_key = '9e6ebf31a1e74a4b9e20fd18267af852';
 var color, i;
 
 async function run() {
@@ -51,7 +52,7 @@ async function run() {
 
     const root = await protobuf.load('nbai_protos.proto');
 
-    axios.get(`${nbai_url}/distancematrix/json?key=${api_key}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`)
+    axios.get(`${process.env.API_HOST}/distancematrix/json?key=${process.env.API_KEY}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`)
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
         process.stdout.write(colorize(91,' '.toString().padStart(precision + 12, ' ')));
