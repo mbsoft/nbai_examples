@@ -11,17 +11,17 @@ var axios = require('axios');
 var maths = require('mathjs');
 const { forEach } = require('mathjs');
 
-var ontario_poly = require('./ontario_poly.json');
+var poly = require('./london_poly.json');
 
-const numberOfPoints = 10;
+const numberOfPoints = 4;
 const precision = 4;
 var color, i;
 
 async function run() {
 
     // Generate random points within the defined polygon
-    var points_origins = randomPointsOnPolygon(numberOfPoints, ontario_poly.features[0]);
-    var points_destinations = randomPointsOnPolygon(numberOfPoints, ontario_poly.features[0]);
+    var points_origins = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
+    var points_destinations = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
 
     var destArray = [];
     var originArray = [];
@@ -55,16 +55,16 @@ async function run() {
     axios.get(`${process.env.API_HOST}/distancematrix/json?key=${process.env.API_KEY}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`)
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
-        process.stdout.write(colorize(91,' '.toString().padStart(precision + 12, ' ')));
+        process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
         originArray.forEach(function(pt) {
-            process.stdout.write('|' + colorize(91, pt));
+            process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
         });
         process.stdout.write('|' + '\n');
         var idx = 0;
         res.data.rows.forEach(function(row) {
-            process.stdout.write(colorize(93,destArray[idx++] + '|'));
+            process.stdout.write(colorize(93,destArray[idx++].padStart(19, ' ')  + '|'));
             row.elements.forEach(function(element) {
-                process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 12,' ')));
+                process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 15,' ')));
                 process.stdout.write('|');
             });
             process.stdout.write('\n');

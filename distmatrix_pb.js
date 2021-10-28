@@ -5,9 +5,9 @@ var maths = require('mathjs');
 const dotenv = require('dotenv');
 dotenv.config();
 
-var ontario_poly = require('./ontario_poly.json');
+var poly = require('./london_poly.json');
 
-const numberOfPoints = 10;
+const numberOfPoints = 4;
 const precision = 4;
 
 
@@ -18,8 +18,8 @@ function colorize(color, output) {
 async function run() {
 
     // Generate random points within the defined polygon
-    var points_origins = randomPointsOnPolygon(numberOfPoints, ontario_poly.features[0]);
-    var points_destinations = randomPointsOnPolygon(numberOfPoints, ontario_poly.features[0]);
+    var points_origins = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
+    var points_destinations = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
 
     var destArray = [];
     var originArray = [];
@@ -55,16 +55,16 @@ async function run() {
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
         const dm = matrix.decode(res.data);
-        process.stdout.write(colorize(91,' '.toString().padStart(precision + 12, ' ')));
+        process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
         originArray.forEach(function(pt) {
-            process.stdout.write('|' + colorize(91, pt));
+            process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
         });
         process.stdout.write('|' + '\n');
         var idx = 0;
         dm.rows.forEach(function(row) {
-            process.stdout.write(colorize(93,destArray[idx++] + '|'));
+            process.stdout.write(colorize(93,destArray[idx++].padStart(19, ' ') + '|'));
             row.elements.forEach(function(element) {
-                process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 12,' ') + '|'));
+                process.stdout.write(colorize(92,element.duration.value.toString().padStart(19,' ') + '|'));
                 // distance is available in element.distance.value
             });
             process.stdout.write('\n');
