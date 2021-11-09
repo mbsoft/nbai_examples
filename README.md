@@ -16,7 +16,8 @@ Utility used to perform route result comparisons (distance/duration) across diff
   - API_KEY (your assigned key)
   - AREA_OF_INTEREST (based on geojson files in `data` folder - la, london, ontario, south yorkshire currently)
   - keys required for other service providers - TomTom, Google, and Mapbox
-  - `node directions/compare_json.js`
+- alter the number of routes to be compared in the constant defined in `directions/compare.js`
+- `node directions/compare.js`
 
 # Distance Matrix
 ![Alt text](./screenshot.png "Screenshot")
