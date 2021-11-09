@@ -2,18 +2,16 @@ const protobuf = require('protobufjs');
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
 var maths = require('mathjs');
+const logo = require('../common/logo');
+const colorize = require('../common/utils');
 const dotenv = require('dotenv');
 dotenv.config();
 
-var poly = require('./london_poly.json');
+var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
 
 const numberOfPoints = 4;
 const precision = 4;
 
-
-function colorize(color, output) {
-    return ['\033[', color, 'm', output, '\033[0m'].join('');
-}
 
 async function run() {
 
@@ -78,15 +76,7 @@ async function run() {
 
 run().catch(err => console.log(err));
 
-function logo() {                       
-    console.log(" _   _ ____    ___  ___ ".padStart(32));
-    console.log("| \\\ | |  _ \\\  / _ \\\(   )".padStart(32));
-    console.log("|  \\\| | |_\) \)| |_| || | ".padStart(32));
-    console.log("|     |  _ ( |  _  || | ".padStart(32));
-    console.log("| |\\\  | |_\) \)| | | || | ".padStart(32));
-    console.log("|_| \\\_|____(_\)_| |_(___\)".padStart(32));
 
-}
                         
                         
                         

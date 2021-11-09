@@ -1,6 +1,23 @@
 # API documentation
 [https://doc.maps.nextbillion.io/api_reference/]
 
+# Directions
+![Alt text](./screen_compare.png "Screenshot")
+## Description
+Utility used to perform route result comparisons (distance/duration) across different service providers.
+- random set of lat/lon pairs within a defined area-of-interest
+- define number of routes to compare
+- output is comparison of results from NBAI, TomTom, Google, and Mapbox
+
+## Quick Start
+- `npm install`
+- modify the `.env` file for
+  - entries API_HOST (http://localhost:9999 or https://api.nextbillion.io) 
+  - API_KEY (your assigned key)
+  - AREA_OF_INTEREST (based on geojson files in `data` folder - la, london, ontario, south yorkshire currently)
+  - keys required for other service providers - TomTom, Google, and Mapbox
+  - `node directions/compare_json.js`
+
 # Distance Matrix
 ![Alt text](./screenshot.png "Screenshot")
 ## Description
@@ -17,8 +34,11 @@ Javascript/node.js example of Nextbillion.ai travel/distance matrix calculation 
 - compile the protobuf definition to JavaScript `protoc --proto_path=. --js_out=library=nbai_pb/matrix,binary:build/gen  nbai_protos.proto`
 - `npm install`
 - transpile TS to JS `tsc build/gen/nbai_fb/*.ts`
-- modify the `.env` file for two entries API_HOST (http://localhost:9999 or https://api.nextbillion.io) and API_KEY (your assigned key)
-- `node distmatrix_json.js` or `node distmatrix_fb.js` `node distmatrix_pb.js`
+- modify the `.env` file for 
+  - entries API_HOST (http://localhost:9999 or https://api.nextbillion.io) 
+  - API_KEY (your assigned key)
+  - AREA_OF_INTEREST (based on geojson files in `data` folder - la, london, ontario, south yorkshire currently)
+- `node distancematrix/distmatrix_json.js` or `node distancematrix/distmatrix_fb.js` `node distancematrix/distmatrix_pb.js`
 - output to console is the time distance grid and the size of the response
 
 

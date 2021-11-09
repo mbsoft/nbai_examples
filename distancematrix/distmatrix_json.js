@@ -1,5 +1,7 @@
 const protobuf = require('protobufjs');
 var randomPointsOnPolygon = require('random-points-on-polygon');
+const logo = require('../common/logo');
+const colorize = require('../common/utils');
 var axios = require('axios');
 var maths = require('mathjs');
 const dotenv = require('dotenv');
@@ -9,13 +11,11 @@ dotenv.config();
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
 var maths = require('mathjs');
-const { forEach } = require('mathjs');
 
-var poly = require('./london_poly.json');
+var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
 
-const numberOfPoints = 4;
+const numberOfPoints = 8;
 const precision = 4;
-var color, i;
 
 async function run() {
 
@@ -50,8 +50,6 @@ async function run() {
     dest_pts = dest_pts.slice(0, dest_pts.length -1);
     let departureTime = Math.round(new Date().getTime()/1000);
 
-    const root = await protobuf.load('nbai_protos.proto');
-
     axios.get(`${process.env.API_HOST}/distancematrix/json?key=${process.env.API_KEY}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`)
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
@@ -78,16 +76,3 @@ async function run() {
 
 run().catch(err => console.log(err));
 
-function colorize(color, output) {
-    return ['\033[', color, 'm', output, '\033[0m'].join('');
-}
-
-function logo() {                       
-    console.log(" _   _ ____    ___  ___ ".padStart(32));
-    console.log("| \\\ | |  _ \\\  / _ \\\(   )".padStart(32));
-    console.log("|  \\\| | |_\) \)| |_| || | ".padStart(32));
-    console.log("|     |  _ ( |  _  || | ".padStart(32));
-    console.log("| |\\\  | |_\) \)| | | || | ".padStart(32));
-    console.log("|_| \\\_|____(_\)_| |_(___\)".padStart(32));
-
-}

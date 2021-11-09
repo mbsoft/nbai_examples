@@ -3,18 +3,17 @@ var fb = require("flatbuffers");
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
 var maths = require('mathjs');
-var nbai = require("./build/gen/nbai_fb/f-b-result");
+var nbai = require("../build/gen/nbai_fb/f-b-result");
+var logo = require("../common/logo");
+var colorize = require("../common/utils");
 const dotenv = require('dotenv');
 dotenv.config();
 
-var poly = require('./london_poly.json');
+var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
 
 const numberOfPoints = 4;
 const precision = 4;
 
-function colorize(color, output) {
-    return ['\033[', color, 'm', output, '\033[0m'].join('');
-}
 
 // Generate random points within the defined polygon
 var points_origins = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
@@ -75,13 +74,5 @@ axios.get(`${process.env.API_HOST}/distancematrix/fb?key=${process.env.API_KEY}&
     })
 
 
-    function logo() {                       
-        console.log(" _   _ ____    ___  ___ ".padStart(32));
-        console.log("| \\\ | |  _ \\\  / _ \\\(   )".padStart(32));
-        console.log("|  \\\| | |_\) \)| |_| || | ".padStart(32));
-        console.log("|     |  _ ( |  _  || | ".padStart(32));
-        console.log("| |\\\  | |_\) \)| | | || | ".padStart(32));
-        console.log("|_| \\\_|____(_\)_| |_(___\)".padStart(32));
-    
-    }
+
 
