@@ -10,6 +10,7 @@
     "fs": "^0.0.1-security",
     "json2csv": "^5.0.6",
     "mathjs": "^9.5.1",
+    "minimist": "^1.2.5",
     "protobufjs": "^6.11.2",
     "random-points-on-polygon": "^0.0.4",
     "util": "^0.12.4"

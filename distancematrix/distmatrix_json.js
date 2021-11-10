@@ -12,38 +12,55 @@ var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');
 var maths = require('mathjs');
 
-var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
+var argv = require('minimist')(process.argv.slice(2));
+if (!!argv.help) {
+    console.log('Usage: node distancematrix/distmatrix_json.json --origins {int} --destinations {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
+    process.exit();
+}
+// use commandline arg for area-of-interest if present otherwise use ENV file setting
+if (!!argv.aoi) {
+    var poly = require(`../data/${argv.aoi}_poly.json`);
+} else {
+    var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
+}
 
-const numberOfPoints = 8;
+if (!!argv.origins) {
+    var numberOrigins = argv.origins;
+} else {
+    var numberOrigins = 8;
+}
+if (!!argv.destinations) {
+    var numberDestinations = argv.destinations;
+} else {
+    var numberDestinations = 8;
+}
+
 const precision = 4;
 
 async function run() {
 
     // Generate random points within the defined polygon
-    var points_origins = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
-    var points_destinations = randomPointsOnPolygon(numberOfPoints, poly.features[0]);
+    var points_origins = randomPointsOnPolygon(numberOrigins, poly.features[0]);
+    var points_destinations = randomPointsOnPolygon(numberDestinations, poly.features[0]);
 
     var destArray = [];
     var originArray = [];
 
     logo();
 
-    console.log(colorize(91,`Distance Matrix Size = ${numberOfPoints}`));
+    console.log(colorize(91,`Distance Matrix Size = ${numberOrigins}x${numberDestinations}`));
     console.log(colorize(91,`Position precision = ${precision}`));
     var orig_pts = '', dest_pts = '';
 
-    for (var j = 0; j < numberOfPoints; j++) {
-        destArray.push(points_destinations[j].geometry.coordinates[1].toFixed(precision) + ',' + points_destinations[j].geometry.coordinates[0].toFixed(precision));
-        originArray.push(points_origins[j].geometry.coordinates[1].toFixed(precision) + ',' + points_origins[j].geometry.coordinates[0].toFixed(precision));
-    }
-    const inputMatrix = maths.matrix([destArray, originArray]);
-    inputMatrix.forEach(function (value, index){
-        if (index[0] == 0) {
-            orig_pts += value + '|';
-        } else {
-            dest_pts += value + '|';
-        }
+    points_destinations.forEach(pt => {
+        destArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
+        dest_pts += pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision) + '|';
     });
+    points_origins.forEach(pt => {
+        originArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
+        orig_pts += pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision) + '|';
+    });
+
 
     // remove trailing pipe from coordinate strings
     orig_pts = orig_pts.slice(0, orig_pts.length -1);
@@ -54,13 +71,13 @@ async function run() {
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
         process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
-        originArray.forEach(function(pt) {
+        destArray.forEach(function(pt) {
             process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
         });
         process.stdout.write('|' + '\n');
         var idx = 0;
         res.data.rows.forEach(function(row) {
-            process.stdout.write(colorize(93,destArray[idx++].padStart(19, ' ')  + '|'));
+            process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ')  + '|'));
             row.elements.forEach(function(element) {
                 process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 15,' ')));
                 process.stdout.write('|');

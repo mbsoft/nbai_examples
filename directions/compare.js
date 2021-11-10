@@ -1,6 +1,5 @@
 var randomPointsOnPolygon = require('random-points-on-polygon');
 const logo = require('../common/logo');
-const colorize = require('../common/utils');
 var axios = require('axios');
 var polyline = require('@mapbox/polyline');
 const dotenv = require('dotenv');
@@ -9,31 +8,46 @@ const {Client} = require("@googlemaps/google-maps-services-js");
 dotenv.config();
 
 var randomPointsOnPolygon = require('random-points-on-polygon');
+const { exit } = require('process');
 
-var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
+var argv = require('minimist')(process.argv.slice(2));
 
-const numberOfRoutes = 10;
+if (!!argv.help) {
+    console.log('Usage: node directions/compare.json --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
+    exit();
+}
+// use commandline arg for area-of-interest if present otherwise use ENV file setting
+if (!!argv.aoi) {
+    var poly = require(`../data/${argv.aoi}_poly.json`);
+} else {
+    var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
+}
+
+const numberOfRoutes = 2;
 const precision = 10;
-
 
 var routes = [];
 const client = new Client({});
 logo();
 async function run() {
 
-    // Generate random points within the defined polygon
-    var points_origins = randomPointsOnPolygon(numberOfRoutes, poly.features[0]);
-    var points_destinations = randomPointsOnPolygon(numberOfRoutes, poly.features[0]);
+    // Generate random points within the defined polygons
+    var randomFeature = Math.floor(Math.random() * (poly.features.length - 0) + 0);
+    var points_origins = randomPointsOnPolygon(numberOfRoutes, poly.features[randomFeature]);
+    randomFeature = Math.floor(Math.random() * (poly.features.length - 0) + 0);
+    var points_destinations = randomPointsOnPolygon(numberOfRoutes, poly.features[randomFeature]);
 
     var destArray = [];
     var originArray = [];
 
     var idx = 0;
 
-    for (var j = 0; j < numberOfRoutes; j++) {
-        destArray.push(points_destinations[j].geometry.coordinates[1].toFixed(precision) + ',' + points_destinations[j].geometry.coordinates[0].toFixed(precision));
-        originArray.push(points_origins[j].geometry.coordinates[1].toFixed(precision) + ',' + points_origins[j].geometry.coordinates[0].toFixed(precision));
-    }
+    points_destinations.forEach(pt => {
+        destArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
+    });
+    points_origins.forEach(pt => {
+        originArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
+    });
 
     let departureTime = Math.round(new Date().getTime()/1000);
     for (var j = 0; j < numberOfRoutes; j++) {
@@ -49,28 +63,28 @@ async function run() {
             }
 
         }).catch((err) => {
-            console.log(err);
+            console.log(err.response.data);
         });
     }
 
     for (var j = 0; j < routes.length; j++) {
         var ttPromise = tomtomCompare(routes[j]);
         await ttPromise.then(function(result) {
-            //console.log(result);
+           
         }, function(err) {
             console.log(err);
         });
         
         var mbPromise = mapboxCompare(routes[j]);
         await mbPromise.then(function(result) {
-            //console.log(result);
+            
         }, function(err) {
             console.log(err);
         });
 
         var gPromise = googleCompare(routes[j]);
         await gPromise.then(function(result) {
-            //console.log(result);
+
         }, function(err) {
             console.log(err);
         });
@@ -88,8 +102,9 @@ async function run() {
 run().catch(err => console.log(err));
 
 function tomtomCompare(route) {
+    let departureTime = Math.round(new Date().getTime()/1000);
     return new Promise(function(resolve, reject) {
-        axios.get(`${process.env.TOMTOM_URL}/${route.start_location.latitude},${route.start_location.longitude}:${route.end_location.latitude},${route.end_location.longitude}/json?key=${process.env.TOMTOM_KEY}&travelMode=car`)
+        axios.get(`${process.env.TOMTOM_URL}/${route.start_location.latitude},${route.start_location.longitude}:${route.end_location.latitude},${route.end_location.longitude}/json?key=${process.env.TOMTOM_KEY}&travelMode=car&computeTravelTimeFor=all`)
         .then((res) => {
             route.compare.tomtom = {
                 distance: res.data.routes[0].summary.lengthInMeters.toFixed(0),
@@ -140,8 +155,6 @@ async function googleCompare(route) {
               route.compare.start_address = rte.legs[0].start_address;
               route.compare.end_address = rte.legs[0].end_address;
               resolve(route);
-             // console.log(`${route.start_location.latitude.toString()},${route.start_location.longitude.toString()},${route.end_location.latitude.toString()},${route.end_location.longitude.toString()},${route.duration},${r.data.routes[0].legs[0].duration.value},${(route.duration-r.data.routes[0].legs[0].duration.value).toFixed(0)},${route.distance},${r.data.routes[0].legs[0].distance.value},${(route.distance -r.data.routes[0].legs[0].distance.value).toFixed(0)}`);
-            //console.log(route.duration + ',' + r.data.routes[0].legs[0].duration.value + ',' + route.duration-r.data.routes[0].legs[0].duration.value);
           })
           .catch((e) => {
             console.log(e.response.data.error_message);
