@@ -15,7 +15,7 @@ var maths = require('mathjs');
 
 var argv = require('minimist')(process.argv.slice(2));
 if (!!argv.help) {
-    console.log('Usage: node distancematrix/distmatrix_json.json --origins {int} --destinations {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
+    console.log('Usage: node distancematrix/distmatrix_json.json --format json|fb|pb --origins {int} --destinations {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
     process.exit();
 }
 // use commandline arg for area-of-interest if present otherwise use ENV file setting
