@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+package matrix;
+
+message MatrixOutputPB {
+    message IntValue {
+        required uint64 value = 1;
+    }
+
+    message MatrixElement {
+        required IntValue duration = 1;
+        required IntValue distance = 2;
+    }
+
+    message MatrixRow {
+        repeated MatrixElement elements = 1;
+    }
+
+    required string status = 1;
+    repeated MatrixRow rows = 2;
+}
+
