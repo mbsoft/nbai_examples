@@ -32,7 +32,7 @@ Javascript/node.js example of Nextbillion.ai travel/distance matrix calculation 
 - install Flatbuffers `brew install flatbuffer`
 - install Protobuf `brew install protobuf`
 - install TypeScript transpiler `brew install tsc`
-- compile the nextbillion.ai schema to generate TypeScript files `flatc --ts nbai_fbschema.fbs`
+- compile the nextbillion.ai schema to generate TypeScript files `flatc -o build/gen --ts nbai_fbschema.fbs`
 - compile the protobuf definition to JavaScript `protoc --proto_path=. --js_out=library=nbai_pb/matrix,binary:build/gen  nbai_protos.proto`
 - `npm install`
 - transpile TS to JS `tsc build/gen/nbai_fb/*.ts`
@@ -40,7 +40,7 @@ Javascript/node.js example of Nextbillion.ai travel/distance matrix calculation 
   - entries API_HOST (http://localhost:9999 or https://api.nextbillion.io) 
   - API_KEY (your assigned key)
   - AREA_OF_INTEREST (based on geojson files in `data` folder - la, london, ontario, south yorkshire currently)
-- Usage: `node distancematrix/distmatrix_json.json --origins {int} --destinations {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire`
+- Usage: `node distancematrix/distmatrix.json --format json --origins {int} --destinations {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire`
 - output to console is the time distance grid and the size of the response
 
 
