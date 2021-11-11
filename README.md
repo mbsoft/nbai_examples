@@ -26,7 +26,7 @@ Javascript/node.js example of Nextbillion.ai travel/distance matrix calculation 
 - random set of lat/lon pairs within a defined polygon
 - default size of grid is 8 x 8
 - `.env` file is read to determine endpoint, key, area of interest
-- command line parameters allow user to set area-of-interest, nuber of origins, and number of destinations
+- command line parameters allow user to set area-of-interest, number of origins, and number of destinations
 
 ## Quick Start
 - install Flatbuffers `brew install flatbuffer`
