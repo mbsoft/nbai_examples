@@ -29,12 +29,14 @@ if (!!argv.destinations) {
 } else {
     var numberDestinations = 8;
 }
+
 const precision = 4;
 
 
 async function run() {
 
     // Generate random points within the defined polygon
+
     var points_origins = randomPointsOnPolygon(numberOrigins, poly.features[0]);
     var points_destinations = randomPointsOnPolygon(numberDestinations, poly.features[0]);
 
@@ -55,7 +57,6 @@ async function run() {
         orig_pts += pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision) + '|';
     });
 
-
     // remove trailing pipe from coordinate strings
     orig_pts = orig_pts.slice(0, orig_pts.length -1);
     dest_pts = dest_pts.slice(0, dest_pts.length -1);
@@ -70,13 +71,16 @@ async function run() {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
         const dm = matrix.decode(res.data);
         process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
+
         destArray.forEach(function(pt) {
+
             process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
         });
         process.stdout.write('|' + '\n');
         var idx = 0;
         dm.rows.forEach(function(row) {
             process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ') + '|'));
+
             row.elements.forEach(function(element) {
                 process.stdout.write(colorize(92,element.duration.value.toString().padStart(19,' ') + '|'));
                 // distance is available in element.distance.value
