@@ -1,5 +1,4 @@
 var randomPointsOnPolygon = require('random-points-on-polygon');
-const logo = require('../common/logo');
 var axios = require('axios');
 var polyline = require('@mapbox/polyline');
 const dotenv = require('dotenv');
@@ -23,31 +22,31 @@ if (!!argv.aoi) {
     var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
 }
 
-const numberOfRoutes = 2;
+const numberOfRoutes = 10;
 const precision = 10;
 
 var routes = [];
 const client = new Client({});
-logo();
-async function run() {
 
-    // Generate random points within the defined polygons
-    var randomFeature = Math.floor(Math.random() * (poly.features.length - 0) + 0);
-    var points_origins = randomPointsOnPolygon(numberOfRoutes, poly.features[randomFeature]);
-    randomFeature = Math.floor(Math.random() * (poly.features.length - 0) + 0);
-    var points_destinations = randomPointsOnPolygon(numberOfRoutes, poly.features[randomFeature]);
+// Generate random points within the defined polygons
+var randomFeature = Math.floor(Math.random() * (poly.features.length - 0) + 0);
+var points_origins = randomPointsOnPolygon(numberOfRoutes, poly.features[randomFeature]);
+randomFeature = Math.floor(Math.random() * (poly.features.length - 0) + 0);
+var points_destinations = randomPointsOnPolygon(numberOfRoutes, poly.features[randomFeature]);
 
-    var destArray = [];
-    var originArray = [];
+var destArray = [];
+var originArray = [];
 
-    var idx = 0;
+var idx = 0;
 
-    points_destinations.forEach(pt => {
-        destArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
-    });
-    points_origins.forEach(pt => {
-        originArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
-    });
+points_destinations.forEach(pt => {
+    destArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
+});
+points_origins.forEach(pt => {
+    originArray.push(pt.geometry.coordinates[1].toFixed(precision) + ',' + pt.geometry.coordinates[0].toFixed(precision));
+});
+
+async function runRoutes() {
 
     let departureTime = Math.round(new Date().getTime()/1000);
     for (var j = 0; j < numberOfRoutes; j++) {
@@ -68,6 +67,13 @@ async function run() {
     }
 
     for (var j = 0; j < routes.length; j++) {
+        //var nbaiPromise = nbaiDistanceMatrix(routes[j]);
+        //await nbaiPromise.then(function(result) {
+
+        //}, function(err) {
+        //    console.log(err);
+        //});
+
         var ttPromise = tomtomCompare(routes[j]);
         await ttPromise.then(function(result) {
            
@@ -88,6 +94,8 @@ async function run() {
         }, function(err) {
             console.log(err);
         });
+
+
        
     }
     //Summarize results
@@ -99,7 +107,23 @@ async function run() {
 
 }
 
-run().catch(err => console.log(err));
+function nbaiDistanceMatrix(route) {
+    let departureTime = Math.round(new Date().getTime()/1000);
+    return new Promise(function(resolve, reject) {
+        axios.get(`${process.env.API_HOST}/distancematrix/json?key=${process.env.API_KEY}&steps=true&alternatives=false&origins=${route.start_location.latitude},${route.start_location.longitude}&destinations=${route.end_location.latitude},${route.end_location.longitude}&mode=4w&departure_time=${departureTime}`)
+        .then((res) => {
+            route.compare.nbai_distance_matrix = {
+                distance: res.data.rows[0].elements[0].distance.value,
+                duration: (res.data.rows[0].elements[0].duration.value/60).toFixed(1)
+            }
+            resolve(route);
+
+        }).catch((err) => {
+            console.log(err.response.data);
+            reject(err);
+        });
+    })
+}
 
 function tomtomCompare(route) {
     let departureTime = Math.round(new Date().getTime()/1000);
@@ -163,3 +187,7 @@ async function googleCompare(route) {
     })
 
 }
+
+runRoutes().catch(err => console.log(err));
+
+

@@ -9,7 +9,17 @@ dotenv.config();
 
 var randomPointsOnPolygon = require('random-points-on-polygon');
 
-var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
+var argv = require('minimist')(process.argv.slice(2));
+if (!!argv.help) {
+    console.log('Usage: node directions/directions.json --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
+    process.exit();
+}
+// use commandline arg for area-of-interest if present otherwise use ENV file setting
+if (!!argv.aoi) {
+    var poly = require(`../data/${argv.aoi}_poly.json`);
+} else {
+    var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
+}
 
 const numberOfPoints = 1;
 const precision = 4;
@@ -39,7 +49,6 @@ async function run() {
         var idx = 0;
         res.data.routes.forEach(function(route) {
             const route_points = polyline.decode(route.geometry);
-            //process.stdout.write(colorize(93,polyline.decode(route.geometry)));
             console.log(`Distance  = ${(route.distance/1000.0).toFixed(2)}km`);
             console.log(`Duration  = ${route.duration}sec`);
             process.stdout.write('\n');
@@ -56,19 +65,17 @@ async function run() {
     }
     for (var i=0;i< steps.length; i++) {
         console.log(`${maneuvers[i].index}-${maneuvers[i].address} ${JSON.stringify(steps[i].start_location)}`)
-        //maneuvers[i].start = steps[i].distance;
     }
-    console.log('Done');
+
 }
 
-async function reverseGeocode(index, theArray) {
-    await axios.get(`https://api.nextbillion.io/h/revgeocode?key=${process.env.GEOCODE_API_KEY}&at=${theArray[0]}`)
+async function reverseGeocode(index, theLocation) {
+    await axios.get(`https://api.nextbillion.io/h/revgeocode?key=${process.env.GEOCODE_API_KEY}&at=${theLocation[0]}`)
     .then((res) => {
         maneuvers[index] = {
             'index': index,
             'address': res.data.items[0].address.label
         }
-        //console.log(`${index} ${res.data.items[0].address.label}`);
     }).catch((err) => {
         console.log(err);
     })
