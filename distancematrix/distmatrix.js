@@ -86,8 +86,14 @@ async function run() {
         matrix = root.lookupType('matrix.MatrixOutputPB');
     }
 
-    axios.get(`${process.env.API_HOST}/distancematrix/${format}?key=${process.env.API_KEY}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`,
-        {responseType: responseType})
+    var bodyRequest = {
+        "departure_time": Math.round(new Date().getTime()/1000),
+        "origins": orig_pts,
+        "destinations": dest_pts,
+        "mode": "4w"
+    };
+    
+    axios.post(`${process.env.API_HOST}/distancematrix/${format}?key=${process.env.API_KEY}`, bodyRequest, {responseType: responseType})
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
         process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
