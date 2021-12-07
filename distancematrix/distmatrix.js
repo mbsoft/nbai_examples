@@ -93,39 +93,18 @@ async function run() {
         "mode": "4w"
     };
     
-    axios.post(`${process.env.API_HOST}/distancematrix/${format}-concise?key=${process.env.API_KEY}`, bodyRequest, {responseType: responseType})
-    .then((res) => {
-        console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
-        process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
-        destArray.forEach(function(pt) {
-            process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
-        });
-        process.stdout.write('|' + '\n');
-        var idx = 0;
-        var dm;
-        if (format === 'pb') {
-            dm = matrix.decode(res.data);
-        } else if (format === 'fb') {
-            let buf = new fb.ByteBuffer(res.data);
-            let fbResponse = nbai.FBResult.getRootAsFBResult(buf);
-            dm = fbResponse.distanceMatrix();
-        } else {
-            dm = res.data;
-        }
-        if (format === 'fb') {
-            for (var i=0;i < dm.rowsLength(); i++) {
-                let row = dm.rows(i);
-    
-                process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ') + '|'));
-    
-                for (var j=0;j < row.elementsLength(); j++) {
-                    let element = row.elements(j);
-                    process.stdout.write(colorize(92,element.duration().toString().padStart(19,' ')+'|'));
-                    // distance is available in element.distance()
-                }
-                process.stdout.write('\n');
-            }
-        } else {
+    // JSON will use POST endpoint (concise)
+    if (format === 'json') {
+        axios.post(`${process.env.API_HOST}/distancematrix/${format}-concise?key=${process.env.API_KEY}`, bodyRequest, {responseType: responseType})
+        .then((res) => {
+            console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
+            process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
+            destArray.forEach(function(pt) {
+                process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
+            });
+            process.stdout.write('|' + '\n');
+            var idx = 0;
+            var dm = res.data;
             dm.rows.forEach(function(row) {
                 process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ')  + '|'));
                 row.forEach(function(element) {
@@ -134,11 +113,55 @@ async function run() {
                 });
                 process.stdout.write('\n');
             });
-        }
+        }).catch((err) => {
+            console.log(err);
+        })      
+    } else {
+        axios.get(`${process.env.API_HOST}/distancematrix/${format}?key=${process.env.API_KEY}&origins=${orig_pts}&destinations=${dest_pts}&mode=4w&departure_time=${departureTime}`, {responseType: responseType})
+        .then((res) => {
+            console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
+            process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
+            destArray.forEach(function(pt) {
+                process.stdout.write('|' + colorize(91, pt.padStart(19, ' ')));
+            });
+            process.stdout.write('|' + '\n');
+            var idx = 0;
+            var dm;
+            if (format === 'pb') {
+                dm = matrix.decode(res.data);
+            } else if (format === 'fb') {
+                let buf = new fb.ByteBuffer(res.data);
+                let fbResponse = nbai.FBResult.getRootAsFBResult(buf);
+                dm = fbResponse.distanceMatrix();
+            } 
+            if (format === 'fb') {
+                for (var i=0;i < dm.rowsLength(); i++) {
+                    let row = dm.rows(i);
+        
+                    process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ') + '|'));
+        
+                    for (var j=0;j < row.elementsLength(); j++) {
+                        let element = row.elements(j);
+                        process.stdout.write(colorize(92,element.duration().toString().padStart(19,' ')+'|'));
+                        // distance is available in element.distance()
+                    }
+                    process.stdout.write('\n');
+                }
+            } else {
+                dm.rows.forEach(function(row) {
+                    process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ')  + '|'));
+                    row.elements.forEach(function(element) {
+                        process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 15,' ')));
+                        process.stdout.write('|');
+                    });
+                    process.stdout.write('\n');
+                });
+            }
 
-    }).catch((err) => {
-        console.log(err);
-    })
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 
 }
 
