@@ -93,7 +93,7 @@ async function run() {
         "mode": "4w"
     };
     
-    axios.post(`${process.env.API_HOST}/distancematrix/${format}?key=${process.env.API_KEY}`, bodyRequest, {responseType: responseType})
+    axios.post(`${process.env.API_HOST}/distancematrix/${format}-concise?key=${process.env.API_KEY}`, bodyRequest, {responseType: responseType})
     .then((res) => {
         console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
         process.stdout.write(colorize(91,' '.toString().padStart(19, ' ')));
@@ -128,8 +128,8 @@ async function run() {
         } else {
             dm.rows.forEach(function(row) {
                 process.stdout.write(colorize(93,originArray[idx++].padStart(19, ' ')  + '|'));
-                row.elements.forEach(function(element) {
-                    process.stdout.write(colorize(92,element.duration.value.toString().padStart(precision + 15,' ')));
+                row.forEach(function(element) {
+                    process.stdout.write(colorize(92,element[0].toString().padStart(precision + 15,' ')));
                     process.stdout.write('|');
                 });
                 process.stdout.write('\n');
