@@ -1,0 +1,23 @@
+{
+    "dependencies": {
+      "@googlemaps/google-maps-services-js": "^3.3.1",
+      "@mapbox/polyline": "^1.1.1",
+      "@types/node": "^16.11.6",
+      "asciichart": "^1.5.25",
+      "axios": "^0.24.0",
+      "csvjson": "^5.1.0",
+      "delay": "5.0.0",
+      "dotenv": "^10.0.0",
+      "flatbuffers": "^2.0.4",
+      "fs": "^0.0.1-security",
+      "google-spreadsheet": "^3.0.13",
+      "googleapis": "^60.0.1",
+      "json2csv": "^5.0.6",
+      "logo": "^0.2.0",
+      "mathjs": "^9.5.1",
+      "minimist": "^1.2.5",
+      "protobufjs": "^6.11.2",
+      "random-points-on-polygon": "^0.0.4",
+      "util": "^0.12.4"
+    }
+}  

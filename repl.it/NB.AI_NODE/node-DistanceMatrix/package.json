@@ -1,0 +1,11 @@
+{
+    "dependencies": {
+      "@types/node": "^16.11.6",
+      "asciichart": "^1.5.25",
+      "axios": "^0.24.0",
+      "mathjs": "^10.0.0",
+      "minimist": "^1.2.5",
+      "random-points-on-polygon": "^0.0.4",
+      "util": "^0.12.4"
+    }
+}
