@@ -6,8 +6,8 @@ var axios = require('axios');
 // Enter your assigned API_KEY and API_HOST here
 // const apiHost = https://api.nextbillion.io
 // const apiKey = '.....'
-const apiKey = '550e8e2631b4a4232e113eceb1dda7cc';
-const apiHost = 'https://api.nextbillion.io';
+const apiKey = process.env['API_KEY'];
+const apiHost = process.env['API_HOST'];
 
 var randomPointsOnPolygon = require('random-points-on-polygon');
 var axios = require('axios');

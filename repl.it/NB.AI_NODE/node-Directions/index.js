@@ -6,7 +6,7 @@ var polyline = require('@mapbox/polyline');
 // Enter your assigned API_KEY and API_HOST here
 // const apiHost = https://api.nextbillion.io
 // const apiKey = '.....'
-const apiKey = '550e8e2631b4a4232e113eceb1dda7cc';
+const apiKey = 'your-api-key-here';
 const apiHost = 'https://api.nextbillion.io';
 
 var poly = require(`./data/toronto_poly.json`);

@@ -3,6 +3,7 @@
     "@googlemaps/google-maps-services-js": "^3.3.1",
     "@mapbox/polyline": "^1.1.1",
     "@types/node": "^16.11.6",
+    "async": "^3.2.2",
     "asciichart": "^1.5.25",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
@@ -13,6 +14,14 @@
     "minimist": "^1.2.5",
     "protobufjs": "^6.11.2",
     "random-points-on-polygon": "^0.0.4",
-    "util": "^0.12.4"
+    "util": "^0.12.4",
+    "google-spreadsheet": "^3.0.13",
+    "googleapis": "^60.0.1",
+    "csvjson": "^5.1.0",
+    "delay": "5.0.0",
+    "nbmap-gl": "1.3.0",
+    "node_or_tools": "1.1.0",
+    "@turf/helpers": "6.5.0",
+    "colorbrewer": "1.5.1"
   }
 }
