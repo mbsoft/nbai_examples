@@ -6,6 +6,8 @@
       lat: 1.3668533589523282,
       lng: 103.83325491115943
     },
+    vectorTilesSourceUrl: 'https://api.nextbillion.io/tiles/v3/tiles.json',
+    style: 'https://api.nextbillion.io/maps/streets/style.json?key=e5976215f43e46498836115925731c9e'
   });
   document.getElementById('aoi').onchange = function () {
     var pos = {
