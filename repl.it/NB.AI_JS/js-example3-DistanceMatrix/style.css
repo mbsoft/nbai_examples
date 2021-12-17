@@ -13,13 +13,27 @@
   padding: 12px;
   z-index: 99;
 }
-
-#remove-grid {
-  top: 50px;
-  right: 0px;
-  padding: 12px;
-  z-index: 99;
+#aoi {
+position: absolute;
+top: 5px;
+left: 20px;
+padding: 12px;
+z-index: 99;
 }
+#origDest {
+position: absolute;
+top: 5px;
+left: 160px;
+padding: 12px;
+z-index: 99;
+}
+#remove-grid  {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    padding: 12px;
+    z-index: 99;
+  }
 
 
 #mainwrapper {
