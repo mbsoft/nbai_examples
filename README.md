@@ -2,6 +2,23 @@
 [https://doc.maps.nextbillion.io/api_reference/]
 
 # Directions
+![Alt text](./screen_directions.png "Screenshot")
+## Description
+Utility used to test ETA, distance, and reverse geocoding
+- random origin/destination pair within a defined area-of-interest
+- show the route distance and duration
+- use reverse geocoding service to describe the route maneuver locations
+
+## Quick Start
+- `npm install`
+- modify the `.env` file for
+  - entries API_HOST (http://localhost:9999 or https://api.nextbillion.io) 
+  - API_KEY (your assigned key)
+  - AREA_OF_INTEREST (based on geojson files in `data` folder - atlanta, bangalore, la, london, newyork, ohio, ontario, sf, south yorkshire, texas currently)
+- alter the number of routes to be compared in the constant defined in `directions/compare.js`
+- `node directions/directions.js --aoi la`
+
+# Routing Compare
 ![Alt text](./screen_compare.png "Screenshot")
 ## Description
 Utility used to perform route result comparisons (distance/duration) across different service providers.
@@ -18,7 +35,7 @@ Utility used to perform route result comparisons (distance/duration) across diff
   - keys required for other service providers - TomTom, Google, and Mapbox
 - alter the number of routes to be compared in the constant defined in `directions/compare.js`
 - `node directions/compare.js --aoi la`
-
+  
 # Distance Matrix
 ![Alt text](./screenshot.png "Screenshot")
 ## Description
