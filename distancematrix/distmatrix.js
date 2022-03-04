@@ -15,7 +15,7 @@ var maths = require('mathjs');
 
 var argv = require('minimist')(process.argv.slice(2));
 if (!!argv.help) {
-    console.log('Usage: node distancematrix/distmatrix_json.json --format json|fb|pb --origins {int} --destinations {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
+    console.log('Usage: node distancematrix/distmatrix_json.json --format json|fb|pb --origins {int} --destinations {int} --departureTime {int} --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
     process.exit();
 }
 // use commandline arg for area-of-interest if present otherwise use ENV file setting
@@ -42,7 +42,11 @@ if (!!argv.format) {
     var format = 'json';
     var responseType = 'json';
 }
-
+if (!!argv.departureTime) {
+    var departureTime = argv.departureTime;
+} else {
+    var departureTime = Math.round(new Date().getTime()/1000);
+}
 const precision = 4;
 
 if (format === 'fb') {
@@ -77,7 +81,6 @@ async function run() {
     // remove trailing pipe from coordinate strings
     orig_pts = orig_pts.slice(0, orig_pts.length -1);
     dest_pts = dest_pts.slice(0, dest_pts.length -1);
-    let departureTime = Math.round(new Date().getTime()/1000);
 
     var root;
     var matrix;
@@ -87,14 +90,16 @@ async function run() {
     }
 
     var bodyRequest = {
-        "departure_time": Math.round(new Date().getTime()/1000),
+        "departure_time": departureTime,
         "origins": orig_pts,
         "destinations": dest_pts,
         "mode": "4w"
     };
+    console.log(bodyRequest);
     
     // JSON will use POST endpoint (concise)
     if (format === 'json') {
+        console.log(`Departure time: ${departureTime} ${new Date(departureTime*1000).toLocaleString()}`);
         axios.post(`${process.env.API_HOST}/distancematrix/${format}-concise?key=${process.env.API_KEY}`, bodyRequest, {responseType: responseType})
         .then((res) => {
             console.log(colorize(91,'Response size = ' + res.headers["content-length"] + ' bytes'));
