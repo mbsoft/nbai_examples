@@ -8,11 +8,12 @@ dotenv.config();
 
 var randomPointsOnPolygon = require('random-points-on-polygon');
 const { exit } = require('process');
+const { arg } = require('mathjs');
 
 var argv = require('minimist')(process.argv.slice(2));
 
 if (!!argv.help) {
-    console.log('Usage: node directions/compare.json --aoi atlanta|bangalore|dallas|la|london|newyork|ohio|ontario|southyorkshire');
+    console.log('Usage: node directions/compare.json --aoi atlanta|paris --format json|csv');
     exit();
 }
 // use commandline arg for area-of-interest if present otherwise use ENV file setting
@@ -22,7 +23,15 @@ if (!!argv.aoi) {
     var poly = require(`../data/${process.env.AREA_OF_INTEREST}_poly.json`);
 }
 
-const numberOfRoutes = 10;
+var format = 'json';
+// use commandline arg to output CSV otherwsie default to JSON
+if (!!argv.format) {
+    if (argv.format == 'csv')
+        format = argv.format;
+        
+} 
+
+const numberOfRoutes = 2;
 const precision = 10;
 
 var routes = [];
@@ -100,10 +109,22 @@ async function runRoutes() {
     }
     //Summarize results
     var out = [];
+    var csv = [];
     routes.forEach(route => {
         out.push(route.compare);
+        var row = route.compare.nbai.distance + "," + route.compare.nbai.duration + "," +
+                  route.compare.google.distance + "," + route.compare.google.duration + "," +
+                  route.compare.tomtom.distance + "," + route.compare.tomtom.duration + "," +
+                  route.compare.mapbox.distance + "," + route.compare.mapbox.duration + "," +
+                  route.compare.origin + "," + route.compare.destination;
+        csv.push(row)
     });
-    console.log(JSON.stringify(out, null, 1));
+
+    // results in valid JSON or CSV
+    if (format == 'csv')
+        console.log(csv);
+    else
+        console.log('{"results": ',JSON.stringify(out, null, 1), '}');
 
 }
 
