@@ -21,19 +21,21 @@
   "author": "NextBillion.ai",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^29.7.0",
     "eslint": "^8.55.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-n": "^16.3.1",
-    "eslint-plugin-promise": "^6.1.1"
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.7.0"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
+    "@mapbox/polyline": "^1.2.0",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
+    "mathjs": "^14.5.3",
     "minimist": "^1.2.8",
-    "random-points-on-polygon": "^0.0.3",
-    "@mapbox/polyline": "^1.2.0"
+    "random-points-on-polygon": "^0.0.3"
   },
   "jest": {
     "testEnvironment": "node",
@@ -61,4 +63,4 @@
   "engines": {
     "node": ">=14.0.0"
   }
-} 
+}
