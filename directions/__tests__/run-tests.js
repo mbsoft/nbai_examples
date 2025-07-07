@@ -74,12 +74,13 @@ const mockDirections = {
   },
   generateRandomPoints: (polygon, count) => {
     return Array(count).fill().map(() => ({
-      geometry: { coordinates: [34.0522, -118.2437] }
+      geometry: { coordinates: [-118.2437, 34.0522] } // GeoJSON format: [longitude, latitude]
     }))
   },
   formatCoordinates: (points, precision) => {
     return points.map(geo => 
-      `${geo.geometry.coordinates[0].toFixed(precision)},${geo.geometry.coordinates[1].toFixed(precision)}`
+      // GeoJSON stores coordinates as [longitude, latitude], but APIs expect "latitude,longitude"
+      `${geo.geometry.coordinates[1].toFixed(precision)},${geo.geometry.coordinates[0].toFixed(precision)}`
     )
   },
   fetchRouteData: async (origin, destination, departureTime) => {
@@ -152,8 +153,8 @@ runTest('generateRandomPoints should generate correct number of points', () => {
 // Test formatCoordinates
 runTest('formatCoordinates should format coordinates with specified precision', () => {
   const points = [
-    { geometry: { coordinates: [34.0522345, -118.2437123] } },
-    { geometry: { coordinates: [34.0523456, -118.2438234] } }
+    { geometry: { coordinates: [-118.2437123, 34.0522345] } }, // GeoJSON format: [longitude, latitude]
+    { geometry: { coordinates: [-118.2438234, 34.0523456] } }  // GeoJSON format: [longitude, latitude]
   ]
   const result = mockDirections.formatCoordinates(points, 4)
   assertEqual(result[0], '34.0522,-118.2437', 'First coordinate should be formatted correctly')

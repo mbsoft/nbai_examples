@@ -13,7 +13,8 @@ const createMockPolygonData = (coordinates = [[[0, 0], [1, 0], [1, 1], [0, 1], [
 
 const createMockCoordinates = (lat, lng) => ({
   geometry: {
-    coordinates: [lat, lng]
+    // GeoJSON format: [longitude, latitude]
+    coordinates: [lng, lat]
   }
 })
 
@@ -60,11 +61,11 @@ const teardownTestEnvironment = () => {
 const setupMocks = () => {
   const randomPointsOnPolygon = require('random-points-on-polygon')
   const polyline = require('@mapbox/polyline')
-  
+
   randomPointsOnPolygon.mockReturnValue([
     createMockCoordinates(34.0522, -118.2437)
   ])
-  
+
   polyline.decode.mockReturnValue([
     [34.0522, -118.2437],
     [34.0523, -118.2438]

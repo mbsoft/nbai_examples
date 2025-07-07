@@ -147,13 +147,15 @@ describe('Directions Module', () => {
 
   describe('formatCoordinates', () => {
     it('should format coordinates with specified precision', () => {
+      // GeoJSON format: [longitude, latitude]
       const points = [
-        { geometry: { coordinates: [34.0522345, -118.2437123] } },
-        { geometry: { coordinates: [34.0523456, -118.2438234] } }
+        { geometry: { coordinates: [-118.2437123, 34.0522345] } },
+        { geometry: { coordinates: [-118.2438234, 34.0523456] } }
       ];
       
       const result = directions.formatCoordinates(points, 4);
       
+      // API format: latitude,longitude
       expect(result).toEqual([
         '34.0522,-118.2437',
         '34.0523,-118.2438'
@@ -161,12 +163,14 @@ describe('Directions Module', () => {
     });
 
     it('should handle different precision values', () => {
+      // GeoJSON format: [longitude, latitude]
       const points = [
-        { geometry: { coordinates: [34.0522345, -118.2437123] } }
+        { geometry: { coordinates: [-118.2437123, 34.0522345] } }
       ];
       
       const result = directions.formatCoordinates(points, 6);
       
+      // API format: latitude,longitude
       expect(result).toEqual(['34.052234,-118.243712']);
     });
   });

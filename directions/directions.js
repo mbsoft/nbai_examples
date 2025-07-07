@@ -10,7 +10,7 @@ dotenv.config();
 
 // Configuration constants
 const CONFIG = {
-  numberOfPoints: 1,
+  numberOfPoints: 10,
   precision: 4,
   supportedAreas: ['atlanta', 'bangalore', 'dallas', 'la', 'london', 'newyork', 'ohio', 'ontario', 'southyorkshire']
 };
@@ -60,7 +60,8 @@ function generateRandomPoints(polygon, count) {
  */
 function formatCoordinates(points, precision) {
   return points.map(geo => 
-    `${geo.geometry.coordinates[0].toFixed(precision)},${geo.geometry.coordinates[1].toFixed(precision)}`
+    // GeoJSON stores coordinates as [longitude, latitude], but APIs expect "latitude,longitude"
+    `${geo.geometry.coordinates[1].toFixed(precision)},${geo.geometry.coordinates[0].toFixed(precision)}`
   );
 }
 
@@ -99,7 +100,7 @@ async function fetchRouteData(origin, destination, departureTime) {
  */
 function processRouteData(routeData) {
   const route = routeData.routes[0];
-  const routePoints = polyline.decode(route.geometry);
+  // const routePoints = polyline.decode(route.geometry);
   
   console.log(`Distance  = ${(route.distance / 1000.0).toFixed(2)}km`);
   console.log(`Duration  = ${route.duration}sec`);
