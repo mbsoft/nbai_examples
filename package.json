@@ -34,8 +34,10 @@
     "@mapbox/polyline": "^1.2.0",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
+    "flatbuffers": "^25.2.10",
     "mathjs": "^14.5.3",
     "minimist": "^1.2.8",
+    "protobufjs": "^7.5.3",
     "random-points-on-polygon": "^0.0.3"
   },
   "jest": {
