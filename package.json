@@ -8,6 +8,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:directions": "jest directions/__tests__/directions.test.js",
+    "test:compare": "jest directions/__tests__/compare.test.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
