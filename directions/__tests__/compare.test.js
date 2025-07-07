@@ -119,12 +119,20 @@ describe('Compare Module', () => {
       const minimist = require('minimist')
       minimist.mockReturnValue({ help: true })
       
+      // Mock the exit function from process module
+      const process = require('process')
+      const originalExit = process.exit
+      process.exit = jest.fn()
+      
       compare.parseArguments(['--help'])
       
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('Usage: node directions/compare.js')
       )
-      expect(processExitSpy).toHaveBeenCalledWith(0)
+      expect(process.exit).toHaveBeenCalledWith(0)
+      
+      // Restore original process.exit
+      process.exit = originalExit
     })
   })
 
@@ -381,10 +389,12 @@ describe('Compare Module', () => {
         { geometry: { coordinates: [-118.2437, 34.0522] } }
       ])
       
+      // Mock axios calls for each route (2 routes * 3 API calls each = 6 calls)
       axios.get
-        .mockResolvedValueOnce({ data: { routes: [mockRouteData] } }) // fetchNBAIRoute
-        .mockResolvedValue(mockTomTomResponse) // tomtomCompare
-        .mockResolvedValue(mockMapboxResponse) // mapboxCompare
+        .mockResolvedValueOnce({ data: { routes: [mockRouteData] } }) // fetchNBAIRoute for route 0
+        .mockResolvedValueOnce({ data: { routes: [mockRouteData] } }) // fetchNBAIRoute for route 1
+        .mockResolvedValue(mockTomTomResponse) // tomtomCompare calls
+        .mockResolvedValue(mockMapboxResponse) // mapboxCompare calls
       
       const mockClient = {
         directions: jest.fn().mockResolvedValue(mockGoogleResponse)
@@ -461,9 +471,17 @@ describe('Compare Module', () => {
       const minimist = require('minimist')
       minimist.mockReturnValue({})
       
+      // Mock process.exit to prevent actual exit
+      const originalExit = process.exit
+      process.exit = jest.fn()
+      
       await compare.main()
       
       expect(consoleSpy).toHaveBeenCalledWith('Error:', expect.stringContaining('Area of interest not specified'))
+      expect(process.exit).toHaveBeenCalledWith(1)
+      
+      // Restore original process.exit
+      process.exit = originalExit
     })
   })
 
