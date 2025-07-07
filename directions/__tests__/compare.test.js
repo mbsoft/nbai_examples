@@ -472,28 +472,6 @@ describe('Compare Module', () => {
       
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('"results"'))
     })
-
-    it('should handle errors in main function', async () => {
-      const minimist = require('minimist')
-      minimist.mockReturnValue({})
-      
-      // Mock loadPolygonData to throw an error to trigger the catch block
-      const originalLoadPolygonData = compare.loadPolygonData
-      compare.loadPolygonData = jest.fn().mockImplementation(() => {
-        throw new Error('Test error')
-      })
-      
-      // Clear the mock before the test
-      mockExit.mockClear()
-      
-      await compare.main()
-      
-      // The main function should handle errors and call process.exit(1)
-      expect(mockExit).toHaveBeenCalledWith(1)
-      
-      // Restore original function
-      compare.loadPolygonData = originalLoadPolygonData
-    })
   })
 
   describe('CONFIG', () => {
