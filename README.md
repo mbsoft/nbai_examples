@@ -1,3 +1,21 @@
+# NextBillion.ai API Examples
+
+[![CI](https://github.com/mbsoft/nbai_examples/actions/workflows/ci.yml/badge.svg)](https://github.com/mbsoft/nbai_examples/actions/workflows/ci.yml)
+[![Security](https://github.com/mbsoft/nbai_examples/actions/workflows/security.yml/badge.svg)](https://github.com/mbsoft/nbai_examples/actions/workflows/security.yml)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen.svg)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> **Status**: ✅ All tests passing | 🔒 Security scans active | 🚀 CI/CD pipeline running
+
+This repository contains examples and utilities for the NextBillion.ai API, including directions, routing comparisons, and distance matrix calculations.
+
+## Quick Links
+- [API Documentation](https://doc.maps.nextbillion.io/api_reference/)
+- [CI/CD Pipeline](https://github.com/mbsoft/nbai_examples/actions)
+- [Test Coverage](https://github.com/mbsoft/nbai_examples/actions/workflows/ci.yml)
+
+---
+
 # API documentation
 [https://doc.maps.nextbillion.io/api_reference/]
 
@@ -164,6 +182,45 @@ The test suite covers:
 - ✅ Complete workflow integration
 - ✅ Route comparison functionality
 - ✅ Distance matrix operations
+
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+### Automated Workflows
+
+**🧪 CI Pipeline** (`ci.yml`)
+- **Triggers**: Push to main/develop, Pull Requests
+- **Node.js Versions**: 18.x, 20.x
+- **Checks**: Linting, Testing, Coverage Reports
+- **Artifacts**: Test results and coverage reports
+
+**🔒 Security Pipeline** (`security.yml`)
+- **Triggers**: Push to main/develop, Pull Requests, Weekly scans
+- **Checks**: npm audit, Secret scanning with TruffleHog
+- **Schedule**: Every Sunday at midnight UTC
+
+### Pipeline Status
+
+| Workflow | Status | Last Run |
+|----------|--------|----------|
+| CI Tests | ![CI](https://github.com/mbsoft/nbai_examples/actions/workflows/ci.yml/badge.svg) | [View Details](https://github.com/mbsoft/nbai_examples/actions/workflows/ci.yml) |
+| Security | ![Security](https://github.com/mbsoft/nbai_examples/actions/workflows/security.yml/badge.svg) | [View Details](https://github.com/mbsoft/nbai_examples/actions/workflows/security.yml) |
+
+### What Happens on Each Commit
+
+1. **Code Quality**: ESLint checks for code style and potential issues
+2. **Multi-Version Testing**: Tests run against Node.js 18.x and 20.x
+3. **Coverage Analysis**: Jest generates coverage reports
+4. **Security Scan**: npm audit and secret detection
+5. **Artifact Storage**: Test results saved for 7 days
+
+### Viewing Results
+
+- **Live Status**: Click the badges above for real-time status
+- **Detailed Logs**: Visit [Actions tab](https://github.com/mbsoft/nbai_examples/actions)
+- **Coverage Reports**: Download from workflow artifacts
+- **Security Alerts**: Check the Security tab in GitHub
 
 ## Next Steps
 
