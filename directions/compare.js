@@ -181,13 +181,26 @@ function generateResults(routes, format) {
   const csv = [];
   
   routes.forEach(route => {
-    out.push(route.compare);
-    var row = route.compare.nbai.distance + "," + route.compare.nbai.duration + "," +
-              route.compare.google.distance + "," + route.compare.google.duration + "," +
-              route.compare.tomtom.distance + "," + route.compare.tomtom.duration + "," +
-              route.compare.mapbox.distance + "," + route.compare.mapbox.duration + "," +
-              route.compare.origin + "," + route.compare.destination;
-    csv.push(row);
+    if (route.compare && route.compare.nbai) {
+      out.push(route.compare);
+      const nbaiDistance = route.compare.nbai.distance || 'N/A'
+      const nbaiDuration = route.compare.nbai.duration || 'N/A'
+      const googleDistance = route.compare.google?.distance || 'N/A'
+      const googleDuration = route.compare.google?.duration || 'N/A'
+      const tomtomDistance = route.compare.tomtom?.distance || 'N/A'
+      const tomtomDuration = route.compare.tomtom?.duration || 'N/A'
+      const mapboxDistance = route.compare.mapbox?.distance || 'N/A'
+      const mapboxDuration = route.compare.mapbox?.duration || 'N/A'
+      const origin = route.compare.origin || 'N/A'
+      const destination = route.compare.destination || 'N/A'
+      
+      var row = nbaiDistance + "," + nbaiDuration + "," +
+                googleDistance + "," + googleDuration + "," +
+                tomtomDistance + "," + tomtomDuration + "," +
+                mapboxDistance + "," + mapboxDuration + "," +
+                origin + "," + destination;
+      csv.push(row);
+    }
   });
 
   if (format === 'csv') {

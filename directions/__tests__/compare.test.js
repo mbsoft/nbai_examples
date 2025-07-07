@@ -98,7 +98,7 @@ describe('Compare Module', () => {
   describe('parseArguments', () => {
     it('should return parsed arguments with default values', () => {
       const minimist = require('minimist')
-      minimist.mockReturnValue({})
+      minimist.mockReturnValue({ aoi: 'la' })
       
       const result = compare.parseArguments(['--aoi', 'la'])
       
@@ -202,13 +202,7 @@ describe('Compare Module', () => {
       const result = await compare.fetchNBAIRoute('34.0522,-118.2437', '34.0523,-118.2438', 1234567890)
       
       expect(axios.get).toHaveBeenCalledWith(
-        expect.stringContaining('/directions/json'),
-        expect.objectContaining({
-          params: expect.objectContaining({
-            origin: '34.0522,-118.2437',
-            destination: '34.0523,-118.2438'
-          })
-        })
+        expect.stringContaining('/directions/json?key=test-api-key&steps=true&alternatives=false&origin=34.0522,-118.2437&destination=34.0523,-118.2438&mode=4w&departure_time=1234567890')
       )
       expect(result).toEqual(mockRouteData)
     })
@@ -236,12 +230,7 @@ describe('Compare Module', () => {
       const result = await compare.tomtomCompare(route)
       
       expect(axios.get).toHaveBeenCalledWith(
-        expect.stringContaining('api.tomtom.com'),
-        expect.objectContaining({
-          params: expect.objectContaining({
-            key: 'test-tomtom-key'
-          })
-        })
+        expect.stringContaining('api.tomtom.com/routing/1/calculateRoute/34.0522,-118.2437:34.0523,-118.2438/json?key=test-tomtom-key&travelMode=car&computeTravelTimeFor=all')
       )
       expect(result.compare.tomtom).toEqual({
         distance: '5000',
@@ -275,12 +264,7 @@ describe('Compare Module', () => {
       const result = await compare.mapboxCompare(route)
       
       expect(axios.get).toHaveBeenCalledWith(
-        expect.stringContaining('api.mapbox.com'),
-        expect.objectContaining({
-          params: expect.objectContaining({
-            access_token: 'test-mapbox-key'
-          })
-        })
+        expect.stringContaining('api.mapbox.com/directions/v5/mapbox/driving/-118.2437,34.0522;-118.2438,34.0523?access_token=test-mapbox-key&geometries=geojson&alternatives=false')
       )
       expect(result.compare.mapbox).toEqual({
         distance: '5000',
@@ -413,7 +397,7 @@ describe('Compare Module', () => {
       
       const routes = await compare.runRoutes({ aoi: 'la' })
       
-      expect(routes).toHaveLength(1)
+      expect(routes).toHaveLength(2) // CONFIG.numberOfRoutes is 2
       expect(routes[0]).toHaveProperty('compare')
       expect(routes[0].compare).toHaveProperty('nbai')
       expect(routes[0].compare).toHaveProperty('tomtom')
