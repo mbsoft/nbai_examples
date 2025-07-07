@@ -7,6 +7,13 @@ jest.mock('random-points-on-polygon')
 jest.mock('@googlemaps/google-maps-services-js')
 jest.mock('minimist')
 
+// Mock process module
+const mockExit = jest.fn()
+jest.mock('process', () => ({
+  ...jest.requireActual('process'),
+  exit: mockExit
+}))
+
 // Mock environment variables
 process.env.API_HOST = 'https://api.test.com'
 process.env.API_KEY = 'test-api-key'
@@ -119,20 +126,15 @@ describe('Compare Module', () => {
       const minimist = require('minimist')
       minimist.mockReturnValue({ help: true })
       
-      // Mock the exit function from process module
-      const process = require('process')
-      const originalExit = process.exit
-      process.exit = jest.fn()
+      // Clear the mock before the test
+      mockExit.mockClear()
       
       compare.parseArguments(['--help'])
       
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('Usage: node directions/compare.js')
       )
-      expect(process.exit).toHaveBeenCalledWith(0)
-      
-      // Restore original process.exit
-      process.exit = originalExit
+      expect(mockExit).toHaveBeenCalledWith(0)
     })
   })
 
@@ -393,11 +395,15 @@ describe('Compare Module', () => {
       axios.get
         .mockResolvedValueOnce({ data: { routes: [mockRouteData] } }) // fetchNBAIRoute for route 0
         .mockResolvedValueOnce({ data: { routes: [mockRouteData] } }) // fetchNBAIRoute for route 1
-        .mockResolvedValue(mockTomTomResponse) // tomtomCompare calls
-        .mockResolvedValue(mockMapboxResponse) // mapboxCompare calls
+        .mockResolvedValueOnce(mockTomTomResponse) // tomtomCompare for route 0
+        .mockResolvedValueOnce(mockMapboxResponse) // mapboxCompare for route 0
+        .mockResolvedValueOnce(mockTomTomResponse) // tomtomCompare for route 1
+        .mockResolvedValueOnce(mockMapboxResponse) // mapboxCompare for route 1
       
       const mockClient = {
-        directions: jest.fn().mockResolvedValue(mockGoogleResponse)
+        directions: jest.fn()
+          .mockResolvedValueOnce(mockGoogleResponse) // googleCompare for route 0
+          .mockResolvedValueOnce(mockGoogleResponse) // googleCompare for route 1
       }
       const { Client } = require('@googlemaps/google-maps-services-js')
       Client.mockImplementation(() => mockClient)
@@ -471,17 +477,13 @@ describe('Compare Module', () => {
       const minimist = require('minimist')
       minimist.mockReturnValue({})
       
-      // Mock process.exit to prevent actual exit
-      const originalExit = process.exit
-      process.exit = jest.fn()
+      // Clear the mock before the test
+      mockExit.mockClear()
       
       await compare.main()
       
       expect(consoleSpy).toHaveBeenCalledWith('Error:', expect.stringContaining('Area of interest not specified'))
-      expect(process.exit).toHaveBeenCalledWith(1)
-      
-      // Restore original process.exit
-      process.exit = originalExit
+      expect(mockExit).toHaveBeenCalledWith(1)
     })
   })
 
